@@ -107,7 +107,10 @@ var _ = ginkgo.Describe("ManagedClusterAddOn API test", func() {
 
 		mca.Status.Registrations = []addonv1alpha1.RegistrationConfig{
 			{
-				SignerName: "open-cluster-management.io/addontest",
+				Type: "csr",
+				CSR: &addonv1alpha1.CsrRegistrationConfig{
+					SignerName: "open-cluster-management.io/addontest",
+				},
 			},
 		}
 
@@ -143,7 +146,10 @@ var _ = ginkgo.Describe("ManagedClusterAddOn API test", func() {
 
 		mca.Status.Registrations = []addonv1alpha1.RegistrationConfig{
 			{
-				SignerName: "addontest",
+				Type: "csr",
+				CSR: &addonv1alpha1.CsrRegistrationConfig{
+					SignerName: "addontest",
+				},
 			},
 		}
 
