@@ -47,6 +47,11 @@ func (in AddOnTemplateSpec) OpenAPIModelName() string {
 }
 
 // OpenAPIModelName returns the OpenAPI model name for this type.
+func (in AllNamespacesBindingConfig) OpenAPIModelName() string {
+	return "io.open-cluster-management.api.addon.v1alpha1.AllNamespacesBindingConfig"
+}
+
+// OpenAPIModelName returns the OpenAPI model name for this type.
 func (in ClusterManagementAddOn) OpenAPIModelName() string {
 	return "io.open-cluster-management.api.addon.v1alpha1.ClusterManagementAddOn"
 }

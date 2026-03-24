@@ -71,6 +71,9 @@ const (
 	// resources in managed cluster namespace on the hub cluster.
 	// It is a specific case of the SingleNamespace type.
 	HubPermissionsBindingCurrentCluster HubPermissionsBindingType = "CurrentCluster"
+	// HubPermissionsBindingAllNamespaces means the addon agent will have access to resources in any namespace,
+	// or to non-namespaced resources on the hub cluster.
+	HubPermissionsBindingAllNamespaces HubPermissionsBindingType = "AllNamespaces"
 )
 
 // RegistrationSpec describes how to register an addon agent to the hub cluster.
@@ -119,9 +122,10 @@ type HubPermissionConfig struct {
 	// Type of the permissions setting. It defines how to bind the roleRef on the hub cluster. It can be:
 	// - CurrentCluster: Bind the roleRef to the namespace with the same name as the managedCluster.
 	// - SingleNamespace: Bind the roleRef to the namespace specified by SingleNamespaceBindingConfig.
+	// - AllNamespaces: Bind the clusterRoleRef to the subject for the managedCluster.
 	//
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Enum:=CurrentCluster;SingleNamespace
+	// +kubebuilder:validation:Enum:=CurrentCluster;SingleNamespace;AllNamespaces
 	Type HubPermissionsBindingType `json:"type"`
 
 	// CurrentCluster contains the configuration of CurrentCluster type binding.
@@ -131,6 +135,10 @@ type HubPermissionConfig struct {
 	// SingleNamespace contains the configuration of SingleNamespace type binding.
 	// It is required when the type is SingleNamespace
 	SingleNamespace *SingleNamespaceBindingConfig `json:"singleNamespace,omitempty"`
+
+	// AllNamespaces contains the configuration of AllNamespaces type binding.
+	// It is required wwhen the type is AllNamespaces
+	AllNamespaces *AllNamespacesBindingConfig `json:"allNamespaces,omitempty"`
 }
 
 type CurrentClusterBindingConfig struct {
@@ -151,6 +159,14 @@ type SingleNamespaceBindingConfig struct {
 	// the user must make sure it exist on the hub cluster.
 	// +kubebuilder:validation:Required
 	RoleRef rbacv1.RoleRef `json:"roleRef"`
+}
+
+type AllNamespacesBindingConfig struct {
+	// AllNamespacesBindingConfig is the name of the clusterrole the addon agent is bound. A clusterrolebinding
+	// will be created referring to this cluster role with subjects for each cluster namespace.
+	// The user must make sure the clusterrole exists on the hub cluster.
+	// +kubebuilder:validation:Required
+	ClusterRoleName string `json:"clusterRoleName"`
 }
 
 type CustomSignerRegistrationConfig struct {

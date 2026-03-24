@@ -516,6 +516,20 @@ spec:
                               provided ClusterRole/Role to the "system:open-cluster-management:cluster:<cluster-name>:addon:<addon-name>"
                               Group.
                             properties:
+                              allNamespaces:
+                                description: |-
+                                  AllNamespaces contains the configuration of AllNamespaces type binding.
+                                  It is required wwhen the type is AllNamespaces
+                                properties:
+                                  clusterRoleName:
+                                    description: |-
+                                      AllNamespacesBindingConfig is the name of the clusterrole the addon agent is bound. A clusterrolebinding
+                                      will be created referring to this cluster role with subjects for each cluster namespace.
+                                      The user must make sure the clusterrole exists on the hub cluster.
+                                    type: string
+                                required:
+                                - clusterRoleName
+                                type: object
                               currentCluster:
                                 description: |-
                                   CurrentCluster contains the configuration of CurrentCluster type binding.
@@ -572,9 +586,11 @@ spec:
                                   Type of the permissions setting. It defines how to bind the roleRef on the hub cluster. It can be:
                                   - CurrentCluster: Bind the roleRef to the namespace with the same name as the managedCluster.
                                   - SingleNamespace: Bind the roleRef to the namespace specified by SingleNamespaceBindingConfig.
+                                  - AllNamespaces: Bind the clusterRoleRef to the subject for the managedCluster.
                                 enum:
                                 - CurrentCluster
                                 - SingleNamespace
+                                - AllNamespaces
                                 type: string
                             required:
                             - type
